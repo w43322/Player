@@ -262,7 +262,11 @@ open class Player: UIViewController {
     }
 
     /// Playback buffering size in seconds.
-    open var bufferSizeInSeconds: Double = 10
+    open var bufferSizeInSeconds: Double = 10 {
+        didSet {
+            self._playerItem?.preferredForwardBufferDuration = self.bufferSizeInSeconds
+        }
+    }
 
     /// Playback is not automatically triggered from state changes when true.
     open var playbackEdgeTriggered: Bool = true
@@ -684,6 +688,8 @@ extension Player {
         if #available(iOS 11.0, tvOS 11.0, *) {
             self._playerItem?.preferredMaximumResolution = self._preferredMaximumResolution
         }
+
+        self._playerItem?.preferredForwardBufferDuration = self.bufferSizeInSeconds
 
         if let seek = self._seekTimeRequested, self._playerItem != nil {
             self._seekTimeRequested = nil
